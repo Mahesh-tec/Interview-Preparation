@@ -1,0 +1,214 @@
+                           Design Patterns
+      ┌────────────────────────┼────────────────────────┐
+      ▼                        ▼                        ▼
+
+Creational Patterns     Structural Patterns       Behavioral Patterns
+-------------------     ---------------------      ----------------------
+- Singleton             - Adapter                 - Observer
+- Factory Method        - Bridge                  - Strategy
+- Abstract Factory      - Composite               - Command
+- Builder               - Decorator               - Chain of Responsibility
+- Prototype             - Facade                  - Mediator
+                        - Flyweight               - State
+                        - Proxy                   - Template Method
+                                                  - Iterator
+                                                  - Visitor
+                                                  - Interpreter
+                                                  - Memento
+
+
+
+==============================================================
+
+                                      Design Patterns
+             ┌────────────────────────────┬────────────────────────────┬────────────────────────────┐
+             ▼                            ▼                            ▼
+
+    Creational Patterns            Structural Patterns           Behavioral Patterns
+    -------------------           ---------------------          ----------------------
+    ├── Singleton                 ├── Adapter                   ├── Observer
+    │   → Ensures one instance    │   → Converts incompatible    │   → Notifies dependent objects 
+    │     exists globally.        │     interfaces into one.     │     when subject changes.
+    │                             │                             │   → Useful in event-driven systems.
+    ├── Factory Method            ├── Bridge                    ├── Strategy
+    │   → Creates objects via     │   → Separates abstraction    │   → Defines a family of algorithms, 
+    │     interface, not class.   │     from implementation.     │     allowing interchangeability.
+    ├── Abstract Factory          ├── Composite                 ├── Command
+    │   → Creates related object  │   → Treats groups and        │   → Wraps requests into objects
+    │     families without class. │     individual objects same. │     for queuing or logging.
+    ├── Builder                   ├── Decorator                 ├── Chain of Responsibility
+    │   → Builds complex objects  │   → Adds new functionality   │   → Passes request along a chain
+    │     step by step.           │     to objects dynamically.  │     until it is handled.
+    └── Prototype                 ├── Facade                    ├── Mediator
+        → Clones existing object  │   → Provides unified access  │   → Centralizes interactions
+          to avoid re-creation.   │     to subsystem methods.    │     between multiple objects.
+                                  ├── Flyweight                 ├── State
+                                  │   → Minimizes memory by      │   → Allows object to change
+                                  │     sharing common data.     │     behavior when its state changes.
+                                  └── Proxy                     ├── Template Method
+                                      → Controls access to a      │   → Defines steps of an algorithm,
+                                        real object or resource.  │     letting subclasses override parts.
+                                                                  ├── Iterator
+                                                                  │   → Provides access to collection 
+                                                                  │     elements sequentially.
+                                                                  ├── Visitor
+                                                                  │   → Lets you define new operations 
+                                                                  │     without changing the classes.
+                                                                  ├── Interpreter
+                                                                  │   → Parses and evaluates language 
+                                                                  │     grammar or expressions.
+                                                                  └── Memento
+                                                                   → Captures object state to restore 
+                                                                     it later without violating encapsulation.
+
+
+
+========================================================
+
+Singleton
+→ Ensures a class has only one instance throughout the application.
+→ Provides a global point of access to that instance.
+
+Key Features:
+
+Private constructor to restrict object creation.
+
+A static field to hold the single instance.
+
+A public static method to return the instance.
+
+
+Great question! In Java, there are **multiple ways to create a Singleton**, each with different pros and cons, especially regarding **thread-safety, lazy initialization**, and **simplicity**.
+
+---
+
+### ✅ **1. Eager Initialization**
+
+```java
+public class Singleton {
+    private static final Singleton instance = new Singleton();
+    private Singleton() { }
+    public static Singleton getInstance() {
+        return instance;
+    }
+}
+```
+
+* **When:** Instance is created at class loading.
+* **Pros:** Thread-safe, simple.
+* **Cons:** Instance is created even if not used.
+
+---
+
+### ✅ **2. Lazy Initialization**
+
+```java
+public class Singleton {
+    private static Singleton instance;
+    private Singleton() { }
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+```
+
+* **When:** Instance is created only when needed.
+* **Cons:** **Not thread-safe** in multithreaded environments.
+
+---
+
+### ✅ **3. Thread-Safe Singleton (Synchronized Method)**
+
+```java
+public class Singleton {
+    private static Singleton instance;
+    private Singleton() { }
+    public static synchronized Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+```
+
+* **Pros:** Thread-safe.
+* **Cons:** Synchronized method has performance cost.
+
+---
+
+### ✅ **4. Double-Checked Locking (Recommended)**
+
+```java
+public class Singleton {
+    private static volatile Singleton instance;
+    private Singleton() { }
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized(Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+```
+
+* **Pros:** Thread-safe and efficient.
+* **Cons:** Slightly complex code.
+
+---
+
+### ✅ **5. Bill Pugh Singleton (Static Inner Class)**
+
+```java
+public class Singleton {
+    private Singleton() { }
+    private static class Holder {
+        private static final Singleton INSTANCE = new Singleton();
+    }
+    public static Singleton getInstance() {
+        return Holder.INSTANCE;
+    }
+}
+```
+
+* **Pros:** Lazy-loaded, thread-safe without synchronization.
+* **Highly recommended.**
+
+---
+
+### ✅ **6. Enum Singleton (Best & Simplest)**
+
+```java
+public enum Singleton {
+    INSTANCE;
+    public void doSomething() {
+        // behavior
+    }
+}
+```
+
+* **Pros:** Thread-safe, handles serialization, protects against reflection.
+* **Best practice as per Effective Java by Joshua Bloch.**
+
+---
+
+### 🔁 Summary Table:
+
+| Method                    | Lazy? | Thread-Safe | Simple | Recommended |
+| ------------------------- | ----- | ----------- | ------ | ----------- |
+| Eager Initialization      | ❌     | ✅           | ✅      | Sometimes   |
+| Lazy Initialization       | ✅     | ❌           | ✅      | ❌           |
+| Synchronized Method       | ✅     | ✅           | ✅      | ⚠️          |
+| Double-Checked Locking    | ✅     | ✅           | ⚠️     | ✅           |
+| Static Inner Class (Pugh) | ✅     | ✅           | ✅      | ✅✅          |
+| Enum Singleton            | ✅     | ✅           | ✅✅     | ✅✅✅         |
+
+
+
