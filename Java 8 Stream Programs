@@ -1,0 +1,192 @@
+1.Find Missing Number?
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+public class MissingNumber {
+
+        public static void main(String[] args) {
+            findMissingNumbers();
+        }
+
+        public static void findMissingNumbers() {
+            // Original list with possible duplicates
+            List<Integer> input = Arrays.asList( 6, 2, 6, 8, 18, 13)
+                    .stream()//coverts stream
+                    .sorted()//sort ascending order
+                    .toList(); //converts it back to a List.
+
+            List<Integer> output = new ArrayList<>(); //output : will store the missing numbers.
+
+            //prev is initialized to the first number (2 in sorted list).
+            int prev = input.get(0); // Start from the first number (2)
+
+            for (int i = 1; i < input.size(); i++) {
+                int current = input.get(i);
+
+                // Add missing numbers between prev and current
+                for (int j = prev + 1; j < current; j++) {
+                    output.add(j);
+                }
+
+                prev = current; // move to next element
+            }
+
+            System.out.println("Missing numbers: " + output);
+        }
+    }
+output: Missing numbers: [3, 4, 5, 7, 9, 10, 11, 12, 14, 15, 16, 17]
+======================================================
+
+2.HighestFrequencydesc numbers
+
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class HighestFrequencyDesc {
+    public static void main(String[] args) {
+        int[] input = {3, 5, 7, 3, 5, 20, 3, 4, 7, 11, 5, 3, 4};
+
+       List<Integer> result = Arrays.stream(input)                      // Convert int[] to IntStream
+        .boxed()                                                 // Convert IntStream to Stream<Integer>
+        .collect(Collectors.groupingBy(                          // Group by each unique integer
+            Function.identity(),                                 // Key = the integer itself
+            Collectors.counting()))                              // Value = count (frequency) of each integer
+        .entrySet().stream()                                     // Convert Map<Integer, Long> to Stream<Map.Entry>
+        .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())) // Sort by frequency in descending order
+        .map(Map.Entry::getKey)                                  // Extract the integer (key) only
+        .collect(Collectors.toList());                           // Collect into a List<Integer>
+
+System.out.println(result);  // Output: list of integers sorted by frequency (most frequent first)
+
+
+/*
+        Map<Integer, Long> result = Arrays.stream(input)
+                .boxed()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())) // sort by value (frequency) descending
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (a, b) -> a,
+                        LinkedHashMap::new // maintain insertion order
+                ));
+
+        System.out.println(result); // Output: {3=4, 5=3, 7=2, 4=2, 20=1, 11=1}
+    }
+}
+*/
+      
+    }
+}
+
+==============================================================
+3.Spatial Matrix?
+
+import java.util.*;
+public class SprialMatrix {
+
+        public static void main(String[] args) {
+            int[][] mat = {
+                    {1, 2, 3, 4},
+                    {5, 6, 7, 8},
+                    {9, 10, 11, 12},
+                    {13, 14, 15, 16}
+            };
+
+            List<Integer> spiralOrder = new ArrayList<>();
+
+// Define the boundaries of the matrix
+int top = 0, bottom = mat.length - 1;               // Top and bottom row indices
+int left = 0, right = mat[0].length - 1;            // Left and right column indices
+
+while (top <= bottom && left <= right) {            // Continue until all layers are traversed
+
+    // 👉 1. Traverse from Left to Right
+    for (int i = left; i <= right; i++)
+        spiralOrder.add(mat[top][i]);               // Top row: left → right
+    top++;                                          // Move top boundary down
+
+    // 👉 2. Traverse from Top to Bottom
+    for (int i = top; i <= bottom; i++)
+        spiralOrder.add(mat[i][right]);             // Right column: top → bottom
+    right--;                                        // Move right boundary left
+
+    // 👉 3. Traverse from Right to Left (if rows remain)
+    if (top <= bottom) {
+        for (int i = right; i >= left; i--)
+            spiralOrder.add(mat[bottom][i]);        // Bottom row: right → left
+        bottom--;                                   // Move bottom boundary up
+    }
+
+    // 👉 4. Traverse from Bottom to Top (if columns remain)
+    if (left <= right) {
+        for (int i = bottom; i >= top; i--)
+            spiralOrder.add(mat[i][left]);          // Left column: bottom → top
+        left++;                                     // Move left boundary right
+    }
+}
+
+System.out.println(spiralOrder);                    // Output the spiral traversal of the matrix
+
+        }
+    }
+
+output:1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10
+
+========================================================
+4.Anagram Group
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class AnagramGroup {
+    public static void main(String[] args) {
+        List<String> input = Arrays.asList("silent", "angel", "quako", "car", "tea", "Listen", "angle", "pasta", "eat");
+
+        input.stream()
+    // Group words by their sorted character sequence (to detect anagrams)
+    .collect(Collectors.groupingBy(
+        w -> w.toLowerCase()                       // Convert word to lowercase to ignore case
+              .chars()                             // Convert to IntStream of characters
+              .sorted()                            // Sort characters to group anagrams
+              .mapToObj(c -> String.valueOf((char) c)) // Convert sorted int chars back to strings
+              .collect(Collectors.joining())       // Join them into a single sorted key string
+    ))
+    .values().stream()                             // Get the grouped anagram lists (values only)
+    .filter(g -> g.size() > 1)                     // Keep only groups with duplicates (i.e., real anagrams)
+    .forEach(System.out::println);                 // Print each group of anagrams
+
+
+
+
+       /* Map<String, List<String>> anagrams = input.stream()
+                .collect(Collectors.groupingBy(
+                        word -> word.toLowerCase().chars().sorted()
+                                .collect(StringBuilder::new,
+                                        StringBuilder::appendCodePoint,
+                                        StringBuilder::append)
+                                .toString()
+                ));
+
+        anagrams.values().stream()
+                .filter(group -> group.size() > 1)
+                .forEach(System.out::println);*/
+
+
+    }
+}
+
+Output: [tea, eat]
+[angel, angle]
+[silent, Listen]
+
+=====================================
+
+
+
