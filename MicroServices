@@ -1,0 +1,56 @@
+MONOLITHIC ARCHITECTURE
+┌────────────────────────────────────────────┐
+│              Single Application            │
+│ ┌────────┬──────────┬─────────┬──────────┐ │
+│ │ Login  │ Product  │ Orders  │ Payments │ │
+│ └────────┴──────────┴─────────┴──────────┘ │
+│     ➤ One database, one deployment         │
+└────────────────────────────────────────────┘
+          ▲
+          │ Entire app scales as one
+          ▼
+    Hard to maintain, test, and scale
+
+
+MICROSERVICES ARCHITECTURE
+┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+│ Login Service│   │ Product Svc  │   │ Order Svc    │
+└────┬─────────┘   └────┬─────────┘   └────┬──────────┘
+     │                  │                  │
+┌────▼─────┐      ┌─────▼─────┐      ┌─────▼─────┐
+│ DB_Login │      │ DB_Product│      │ DB_Order  │
+└──────────┘      └───────────┘      └───────────┘
+
+✅ Scalable independently
+✅ Technology agnostic
+✅ Resilient & fault-tolerant
+✅ Teams can work in parallel
+
+
+=========================================
+
+| #   | Benefit                                    | Explanation                                                                                                                           |
+| --- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1️⃣ | **Scalability**                            | Each microservice can be scaled independently based on its demand (e.g., scale `OrderService` without scaling the entire app).        |
+| 2️⃣ | **Faster Development & Deployment**        | Teams can work independently on different services and deploy them without affecting others (supports **CI/CD**).                     |
+| 3️⃣ | **Technology Flexibility**                 | Each microservice can use a different tech stack (Java, Node.js, Python) based on use case.                                           |
+| 4️⃣ | **Improved Fault Isolation**               | A failure in one service (e.g., `NotificationService`) doesn’t crash the whole system.                                                |
+| 5️⃣ | **Better Maintainability**                 | Smaller codebases are easier to understand, test, and modify.                                                                         |
+| 6️⃣ | **Reusability**                            | Microservices like `AuthService` or `PaymentService` can be reused across multiple applications.                                      |
+| 7️⃣ | **Easier Testing**                         | Microservices can be tested independently using unit and integration tests.                                                           |
+| 8️⃣ | **Continuous Delivery**                    | Enables rapid releases and rollbacks using tools like Docker, Kubernetes, and Jenkins.                                                |
+| 9️⃣ | **Organized Around Business Capabilities** | Services represent business units (e.g., Billing, Order, Inventory) which aligns with domain-driven design.                           |
+| 🔟  | **Cloud-Native Ready**                     | Fits perfectly with modern cloud platforms (AWS, Azure, GCP), supports autoscaling, containerization, and orchestration (Kubernetes). |
+
+=====================================
+
+| #   | Disadvantage                | Banking Example                                      |
+| --- | --------------------------- | ---------------------------------------------------- |
+| 1️⃣ | Inter-Service Communication | Fund transfer fails to trigger customer notification |
+| 2️⃣ | Data Inconsistency          | Loan partially saved across services                 |
+| 3️⃣ | Operational Overhead        | Restarting one faulty service among 50+              |
+| 4️⃣ | Difficult Testing           | End-to-end flow needs complex service orchestration  |
+| 5️⃣ | Security Concerns           | Unsecured API leaks account data                     |
+=========================================================
+
+
