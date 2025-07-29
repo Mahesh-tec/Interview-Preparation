@@ -188,5 +188,27 @@ Output: [tea, eat]
 
 =====================================
 
+import java.util.stream.Collectors;  // For joining characters into a string
+import java.util.Collections;        // (Not used here, can be removed)
+import java.util.List;               // (Not used here, can be removed)
+
+public class Main {
+    public static void main(String[] args) {
+        // Step 1: Define the input number
+        int inputNumber = 4321;
+
+        // Step 2: Convert number to string → reverse it → convert characters to Stream
+        String reversed = new StringBuilder(String.valueOf(inputNumber)) // Convert int to String using String.valueOf()
+            .reverse()                                                   // Reverse the string using StringBuilder
+            .chars()                                                     // Convert reversed string to an IntStream of characters
+            .mapToObj(c -> String.valueOf((char) c))                     // Convert each int character to a String
+            .collect(Collectors.joining());                              // Join all strings without any separator
+
+        // Step 3: Print the reversed digits without spaces
+        System.out.println("Digits in reverse order: " + reversed);
+    }
+}
+
+
 
 
