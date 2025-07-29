@@ -52,5 +52,70 @@ MICROSERVICES ARCHITECTURE
 | 4️⃣ | Difficult Testing           | End-to-end flow needs complex service orchestration  |
 | 5️⃣ | Security Concerns           | Unsecured API leaks account data                     |
 =========================================================
+Service Discovery:
+=================
+
+In microservices architecture, Service Discovery is the mechanism that allows microservices to find and communicate with each other dynamically,
+without hardcoding the network locations (IP and port) of each service.
+
+
+| Component            | Description                                                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Service Registry** | Central directory that keeps track of service instances and metadata.<br>📘 Examples: **Eureka**, **Consul**, **Zookeeper** |
+| **Service Provider** | Microservice that registers itself with the service registry on startup.                                                    |
+| **Service Consumer** | Microservice that queries the registry to find and call another service.                                                    |
+
+
+=============================
+
+### 📘 **API Gateway – Definition**
+
+An **API Gateway** is a **server** that acts as a **single entry point** for all client requests in a microservices architecture. 
+It routes requests to the appropriate microservice, handles common cross-cutting concerns like **authentication**,
+**rate limiting**, **logging**, and **response transformation**, and provides a **unified interface** to the client.
+
+---
+
+### ✅ **Key Responsibilities of API Gateway**
+
+| Feature                             | Description                                                                            |
+| ----------------------------------- | -------------------------------------------------------------------------------------- |
+| **Routing**                         | Forwards client requests to the appropriate backend microservice based on the URL path |
+| **Authentication & Authorization**  | Verifies tokens (like JWT) and controls access to services                             |
+| **Rate Limiting & Throttling**      | Protects services from being overwhelmed by too many requests                          |
+| **Load Balancing**                  | Distributes traffic across multiple service instances                                  |
+| **Request/Response Transformation** | Modifies headers, payloads, or formats as needed                                       |
+| **Aggregation**                     | Combines results from multiple microservices into a single response                    |
+| **Logging & Monitoring**            | Captures traffic logs, request metrics, and error traces                               |
+
+---
+
+### 🛠️ **Popular API Gateway Tools**
+
+| Tool                     | Description                                             |
+| ------------------------ | ------------------------------------------------------- |
+| **Spring Cloud Gateway** | Lightweight gateway for Spring Boot microservices       |
+| **Kong**                 | Cloud-native, scalable API gateway                      |
+| **AWS API Gateway**      | Managed gateway service in Amazon Web Services          |
+| **NGINX**                | Can be configured as an API Gateway with load balancing |
+| **Zuul** (Netflix OSS)   | Older Spring Cloud gateway (now replaced by SCG)        |
+
+---
+
+### 🏦 **Real-Time Example in Banking**
+
+In a digital banking application:
+
+* The **Mobile App** sends all API calls (Login, Account Info, Payments) to the **API Gateway**
+* The gateway:
+
+  * Authenticates the JWT token
+  * Routes `/api/accounts` to `Account-Service`
+  * Routes `/api/transactions` to `Transaction-Service`
+  * Aggregates balance + transaction data for a dashboard
+  * Logs the request and response details
+
+---
+
 
 
