@@ -1,0 +1,120 @@
+JWT in Spring Boot (Interview Summary)
+1. What is JWT?
+
+JWT (JSON Web Token) is a compact, stateless token used for authentication & authorization.
+
+Structure: Header.Payload.Signature.
+
+Stored client-side (localStorage/sessionStorage).
+
+2. How JWT Works (Flow)
+
+User logs in with username/password.
+
+Server validates credentials → generates JWT.
+
+JWT is returned to client.
+
+Client sends JWT in Authorization: Bearer <token> header for subsequent requests.
+
+Server validates token (signature + expiry) → authorizes request.
+
+3. Steps to Implement in Spring Boot
+
+3.1 Dependencies: spring-boot-starter-security, jjwt.
+
+3.2 JwtUtil: Generates, validates, extracts claims from JWT.
+
+3.3 JwtFilter: Intercepts requests, extracts token, validates, sets authentication in SecurityContext.
+
+3.4 SecurityConfig: Configure Spring Security → disable sessions (STATELESS), permit /auth/login, secure other endpoints, add JWT filter.
+
+3.5 AuthController: Login endpoint → validates user → returns JWT token.
+
+3.6 Client Usage: Send token in header for protected APIs.
+
+4. Advantages
+
+Stateless → no server-side session storage.
+
+Lightweight & scalable for microservices.
+
+Can carry claims (like roles, username).
+
+5. Common Enhancements
+
+Refresh tokens for long sessions.
+
+Role-based authorization (ROLE_USER, ROLE_ADMIN).
+
+Store secret key securely (env variables / Vault).
+
+Token blacklist/expiry handling.
+
+
+===============================
+
+Classes in Spring Boot JWT Implementation
+1. JwtUtil
+
+Purpose: Utility class for JWT operations.
+
+Functions:
+
+Generate JWT token.
+
+Extract claims (like username, roles).
+
+Validate token (expiry, signature).
+
+2. JwtFilter (extends OncePerRequestFilter)
+
+Purpose: Intercepts every incoming HTTP request.
+
+Functions:
+
+Look for Authorization: Bearer <token> header.
+
+Validate JWT with JwtUtil.
+
+If valid → set authentication in SecurityContextHolder.
+
+3. SecurityConfig
+
+Purpose: Configures Spring Security.
+
+Functions:
+
+Disable CSRF (since stateless).
+
+Set session policy = STATELESS.
+
+Permit /auth/login.
+
+Protect all other endpoints.
+
+Add JwtFilter before UsernamePasswordAuthenticationFilter.
+
+4. AuthController
+
+Purpose: Login endpoint for authentication.
+
+Functions:
+
+Accept username & password.
+
+Validate user (DB or in-memory).
+
+If valid → return JWT token using JwtUtil.
+
+5. Client Usage
+
+Purpose: How frontend/mobile app interacts.
+
+Steps:
+
+First call /auth/login → receive JWT.
+
+Store JWT in localStorage/sessionStorage.
+
+Send JWT in Authorization: Bearer <token> for protected APIs.
