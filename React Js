@@ -386,9 +386,265 @@ export default function Student() {
             required
           />
         </div>
-
-        <button type="submit">Submit</button>
+      <button type="submit">Submit</button>
       </form>
     </div>
   );
 }
+
+===========================================
+Scenario Based questions:
+=========================
+
+1. Does updating state in Child update Parent automatically?
+
+❌ No, it doesn’t.
+React follows one-way data flow (top-down):
+Parent → Child: Data is passed down as props.
+Child → Parent: A child cannot directly update parent state. Instead, the parent must pass a callback function to the child.
+When the child calls that function, the parent updates its own state.
+
+import React, { useState } from "react";
+
+// Child Component (B)
+function Child({ updateParent }) {
+  const handleClick = () => {
+    updateParent("World"); // send "World" to parent
+  };
+
+  return (
+    <div>
+      <h3>Child B</h3>
+      <button onClick={handleClick}>Update Parent</button>
+    </div>
+  );
+}
+
+// Parent Component (A)
+export default function Parent() {
+  const [message, setMessage] = useState("Hello"); // parent variable
+
+  return (
+    <div>
+      <h2>Parent A</h2>
+      <p>Message: {message}</p>
+
+      {/* Pass parent's updater to child */}
+      <Child updateParent={setMessage} />
+    </div>
+  );
+}
+
+How this works:
+
+1.Parent A starts with message = "Hello".
+
+2.It passes setMessage (state updater) as updateParent to Child B.
+
+3.Child B calls updateParent("World").
+
+4.Parent A’s state changes → "Hello" → "World".
+
+5.React re-renders Parent and updates the UI.
+
+
+=========================================================
+
+What is React Context API?
+
+The React Context API is a built-in way to share state and functions across components without passing props manually (prop drilling).
+
+It provides a mechanism to make values global to a component tree.
+
+Think of it like a shared box: Parent puts data inside, and any Child (no matter how deep) can take or update it.
+
+🔹 Key Concepts
+
+React.createContext()
+
+Creates a Context object.
+
+Think of it as the “container” for shared data.
+
+Context.Provider
+
+Wraps components and provides data (state, functions, objects).
+
+Context.Consumer
+
+Used inside a child to read or update the data from the provider.
+
+Without hooks, we use this Consumer pattern.
+
+Example: Parent A (Hello) → Child B updates it to World (via Context API)
+
+import React, { createContext, Component } from "react";
+
+// 1. Create Context
+const MessageContext = createContext();
+
+// 2. Parent Component
+class Parent extends Component {
+  state = { message: "Hello" };
+
+  setMessage = (msg) => {
+    this.setState({ message: msg });
+  };
+
+  render() {
+    return (
+      // 3. Provide state + updater via Context
+      <MessageContext.Provider
+        value={{ message: this.state.message, setMessage: this.setMessage }}
+      >
+        <h2>Parent: {this.state.message}</h2>
+        <Child />
+      </MessageContext.Provider>
+    );
+  }
+}
+
+// 4. Child Component
+class Child extends Component {
+  render() {
+    return (
+      // 5. Consume context values
+      <MessageContext.Consumer>
+        {({ message, setMessage }) => (
+          <div>
+            <p>Child sees: {message}</p>
+            <button onClick={() => setMessage("World")}>
+              Update Parent
+            </button>
+          </div>
+        )}
+      </MessageContext.Consumer>
+    );
+  }
+}
+
+export default Parent;
+
+
+How it works:
+
+MessageContext is created.
+
+Parent wraps children inside MessageContext.Provider.
+
+It passes { message, setMessage } as the shared value.
+
+Child uses MessageContext.Consumer.
+
+It receives { message, setMessage }.
+
+It can read parent’s message and call setMessage to update it.
+
+When child clicks button → setMessage("World") → Parent state updates → re-render → new value flows down.
+
+🔹 Why use Context API?
+
+✅ Avoids prop drilling (passing props multiple levels deep).
+✅ Allows multiple children (siblings, grandchildren) to access/update the same state.
+✅ No need for hooks (you can use Consumer in class components).
+
+==========================================================================
+
+2.Problem Definition
+
+In JavaScript, code runs synchronously by default (line by line).
+But when we call a REST API (fetch, axios), it is asynchronous — it doesn’t wait.
+So if we write:
+example :
+
+console.log("Step 1");
+fetch("https://jsonplaceholder.typicode.com/posts/1");
+console.log("Step 2");
+
+output:
+
+Step 1
+Step 2
+(API response comes later)
+
+
+Solution: Using async/await:
+============================
+// 1 to 6: Normal synchronous JS
+console.log("Step 1");
+console.log("Step 2");
+console.log("Step 3");
+console.log("Step 4");
+console.log("Step 5");
+console.log("Step 6");
+
+// Wrap in async function
+async function runFlow() {
+  try {
+    // 7 & 8: Two REST API calls executed in parallel
+    let [response1, response2] = await Promise.all([
+      fetch("https://jsonplaceholder.typicode.com/posts/1"),
+      fetch("https://jsonplaceholder.typicode.com/posts/2")
+    ]);
+
+    // Wait for JSON parsing
+    let data1 = await response1.json();
+    let data2 = await response2.json();
+
+    console.log("API 1 Response:", data1);
+    console.log("API 2 Response:", data2);
+
+    // 9 to 10: Run only after both API responses are ready
+    console.log("Step 9 - Processing both APIs...");
+    console.log("Step 10 - Finished!");
+  } catch (error) {
+    console.error("Error occurred:", error);
+  }
+}
+
+// Call function
+runFlow();
+
+
+
+
+How this works:
+===============
+Lines 1–6 → run normally.
+At line 7 → API is called.
+await makes JavaScript pause here until API response comes back.
+Once response is ready → lines 9–10 execute.
+If API fails → error is caught in catch.
+
+
+============
+Approach 2: Using .then() (older style):
+========================================
+
+// 1 to 6: Normal synchronous JS
+console.log("Step 1");
+console.log("Step 2");
+console.log("Step 3");
+console.log("Step 4");
+console.log("Step 5");
+console.log("Step 6");
+
+// Step 7 & 8: Parallel API calls with Promise.all
+Promise.all([
+  fetch("https://jsonplaceholder.typicode.com/posts/1"),
+  fetch("https://jsonplaceholder.typicode.com/posts/2")
+])
+  .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+  .then(([data1, data2]) => {
+    console.log("API 1 Response:", data1);
+    console.log("API 2 Response:", data2);
+
+    // Step 9 & 10: Run only after API responses
+    console.log("Step 9 - Processing both APIs...");
+    console.log("Step 10 - Finished!");
+  })
+  .catch((err) => console.error("Error:", err));
+
+
+
+       
