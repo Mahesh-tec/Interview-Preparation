@@ -31,7 +31,7 @@ Server validates token (signature + expiry) → authorizes request.
 
 3.5 AuthController: Login endpoint → validates user → returns JWT token.
 
-3.6 Client Usage: Send token in header for protected APIs.
+-> Client Usage: Send token in header for protected APIs.
 
 4. Advantages
 
