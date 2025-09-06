@@ -1,0 +1,394 @@
+1. useState
+===========
+
+👉 Manages state in a functional component.
+
+import React, { useState } from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+}
+
+Explanation:
+===========
+
+Returns an array: [state, setState].
+
+state is the current value.
+
+setState is the function to update it.
+
+Updating state causes the component to re-render.
+
+==========================================================
+
+2. useEffect
+===========
+
+Definition:
+useEffect lets you perform side effects (like fetching data, subscriptions, timers, DOM updates).
+
+Explanation:
+============
+Runs after every render by default.
+
+Can run only on mount/unmount ([]).
+
+Can re-run when dependencies change ([dep1, dep2]).
+
+Cleanup function can prevent memory leaks.
+
+import React, { useState, useEffect } from "react";
+
+export default function Timer() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => setCount(c => c + 1), 1000);
+    return () => clearInterval(interval); // cleanup
+  }, []);
+
+  return <h3>Timer: {count}</h3>;
+}
+
+
+==========================================
+
+3. useContext
+============
+
+Definition:
+useContext lets you consume values from Context API without prop drilling.
+
+Explanation:
+===========
+
+Requires a Context created with createContext().
+
+Provides values with Provider.
+
+Access values inside components with useContext.
+
+import React, { createContext, useContext } from "react";
+
+const ThemeContext = createContext("light");
+
+function Child() {
+  const theme = useContext(ThemeContext);
+  return <h3>Theme: {theme}</h3>;
+}
+export default function App() {
+  return (
+    <ThemeContext.Provider value="dark">
+      <Child />
+    </ThemeContext.Provider>
+  );
+}
+======================================
+
+4. useRef
+========
+
+Definition:
+useRef creates a mutable reference that doesn’t cause re-renders when updated.
+
+Explanation:
+===========
+
+Can reference DOM elements.
+
+Can store values across renders without re-rendering.
+
+import React, { useRef } from "react";
+
+export default function InputFocus() {
+  const inputRef = useRef();
+
+  const focusInput = () => inputRef.current.focus();
+
+  return (
+    <div>
+      <input ref={inputRef} type="text" placeholder="Enter text" />
+      <button onClick={focusInput}>Focus</button>
+    </div>
+  );
+}
+============================================
+5. useMemo
+
+Definition:
+useMemo memoizes the result of a calculation.
+
+Explanation:
+
+Only recalculates when dependencies change.
+Useful for expensive computations.
+
+import React, { useState, useMemo } from "react";
+
+export default function ExpensiveCalc() {
+  const [num, setNum] = useState(0);
+  const [count, setCount] = useState(0);
+
+  const squared = useMemo(() => {
+    console.log("Calculating...");
+    return num * num;
+  }, [num]);
+
+  return (
+    <div>
+      <p>Squared: {squared}</p>
+      <button onClick={() => setNum(num + 1)}>Change Num</button>
+      <button onClick={() => setCount(count + 1)}>Change Count</button>
+    </div>
+  );
+}
+============================================================
+
+6. useCallback
+
+Definition:
+useCallback memoizes a function to avoid re-creation on each render.
+
+Explanation:
+
+Prevents unnecessary re-renders of child components.
+Returns the same function reference unless dependencies change.
+
+import React, { useState, useCallback } from "react";
+
+export default function CallbackExample() {
+  const [count, setCount] = useState(0);
+
+  const increment = useCallback(() => setCount(c => c + 1), []);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+}
+==========================================
+
+7. useReducer:
+==============
+
+Definition:
+useReducer is an alternative to useState for complex state logic.
+
+Explanation:
+Uses a reducer function (state, action) => newState.
+Similar to Redux concept.
+Good for state with multiple conditions.
+
+import React, { useReducer } from "react";
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "inc": return { count: state.count + 1 };
+    case "dec": return { count: state.count - 1 };
+    default: return state;
+  }
+};
+
+export default function Counter() {
+  const [state, dispatch] = useReducer(reducer, { count: 0 });
+
+  return (
+    <div>
+      <p>{state.count}</p>
+      <button onClick={() => dispatch({ type: "inc" })}>+</button>
+      <button onClick={() => dispatch({ type: "dec" })}>-</button>
+    </div>
+  );
+}
+===============================================================
+
+
+8. useLayoutEffect:
+====================
+
+Definition:
+useLayoutEffect runs synchronously after DOM mutations but before the browser paints.
+
+Explanation:
+
+Similar to useEffect, but blocks painting until execution completes.
+Used when you need to measure DOM size/position.
+
+import React, { useLayoutEffect, useRef } from "react";
+
+export default function Box() {
+  const boxRef = useRef();
+
+  useLayoutEffect(() => {
+    console.log("Box width:", boxRef.current.offsetWidth);
+  }, []);
+
+  return <div ref={boxRef} style={{ width: "200px", height: "50px", background: "skyblue" }}>Box</div>;
+}
+====================================================================
+
+
+9. useImperativeHandle
+
+Definition:
+Customizes what parent components can access when using ref.
+
+Explanation:
+
+Used with forwardRef.
+Useful when exposing specific methods from child to parent.
+
+Example:
+import React, { useRef, forwardRef, useImperativeHandle } from "react";
+
+const Child = forwardRef((props, ref) => {
+  useImperativeHandle(ref, () => ({
+    sayHello() {
+      alert("Hello from Child!");
+    }
+  }));
+  return <h3>Child Component</h3>;
+});
+
+export default function Parent() {
+  const childRef = useRef();
+
+  return (
+    <div>
+      <Child ref={childRef} />
+      <button onClick={() => childRef.current.sayHello()}>Call Child</button>
+    </div>
+  );
+}
+=======================================
+
+15. Custom Hooks
+================
+
+Definition:
+Custom hooks are user-defined functions that use other hooks.
+
+Explanation:
+
+Encapsulates reusable logic.
+Always start with use.
+
+Example:
+import React, { useState, useEffect } from "react";
+
+function useFetch(url) {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch(url).then(res => res.json()).then(setData);
+  }, [url]);
+
+  return data;
+}
+
+export default function App() {
+  const user = useFetch("https://jsonplaceholder.typicode.com/users/1");
+  return <div>{user ? user.name : "Loading..."}</div>;
+}
+=========================================================
+
+
+Example of Student Funtion:
+===========================
+
+import React, { useState } from "react";
+
+export default function Student() {
+  const [student, setStudent] = useState({
+    name: "",
+    rollNo: "",
+    studentClass: "",
+    email: ""
+  });
+
+  // handle input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setStudent({
+      ...student,
+      [name]: value
+    });
+  };
+
+  // handle form submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Student Details:
+    Name: ${student.name}
+    Roll No: ${student.rollNo}
+    Class: ${student.studentClass}
+    Email: ${student.email}`);
+  };
+
+  return (
+    <div style={{ margin: "20px", maxWidth: "400px" }}>
+      <h2>Student Form</h2>
+      <form onSubmit={handleSubmit}>
+        {/* Name */}
+        <div style={{ marginBottom: "10px" }}>
+          <label>Name: </label><br />
+          <input
+            type="text"
+            name="name"
+            value={student.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Roll No */}
+        <div style={{ marginBottom: "10px" }}>
+          <label>Roll No: </label><br />
+          <input
+            type="text"
+            name="rollNo"
+            value={student.rollNo}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Class */}
+        <div style={{ marginBottom: "10px" }}>
+          <label>Class: </label><br />
+          <input
+            type="text"
+            name="studentClass"
+            value={student.studentClass}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div style={{ marginBottom: "10px" }}>
+          <label>Email: </label><br />
+          <input
+            type="email"
+            name="email"
+            value={student.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
+}
