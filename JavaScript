@@ -1,0 +1,303 @@
+JavaScript ES6 Features:
+========================
+
+
+1. let and const:
+=================
+
+let: Block-scoped variable.
+const: Block-scoped constant (cannot reassign).
+Avoids hoisting issues of var.
+
+Example:
+
+let name = "Mahesh";
+name = "Onti"; // allowed
+
+const pi = 3.14;
+pi = 3.1415; // ❌ error
+
+=======================================
+
+2. Arrow Functions in JavaScript
+📖 Definition
+
+An Arrow Function is a concise syntax for writing JavaScript functions using the => (arrow) notation.
+They provide a shorter way to write functions and lexically bind the this value.
+
+🔹 Key Points
+
+Concise syntax:
+No need to write function keyword.
+this binding:
+this inside an arrow function refers to the context where the function was defined, not where it is called.
+Implicit return:
+If the function has a single expression, it automatically returns that value.
+Cannot be used as constructors:
+Arrow functions cannot use new.
+
+// Regular function
+function sum(a, b) {
+  return a + b;
+}
+
+// Arrow function (equivalent)
+const sum = (a, b) => a + b;
+
+==================================
+
+3. Template Literals in JavaScript
+📖 Definition
+
+Template Literals (introduced in ES6) are a way to create strings in JavaScript using backticks ` instead of quotes.
+They allow string interpolation, multi-line strings, and expression embedding inside strings.
+
+🔹 Key Points
+
+Backticks: Use ` instead of single ' or double " quotes.
+String Interpolation: Insert variables or expressions using ${expression}.
+Multi-line Strings: Strings can span multiple lines without \n.
+Expression Evaluation: You can include any valid JS expression inside ${}.
+
+Example:
+========
+
+const name = "Mahesh";
+const age = 25;
+
+// Using template literals
+const message = `My name is ${name} and I am ${age} years old.`;
+console.log(message);
+// Output: My name is Mahesh and I am 25 years old.
+
+==================================================================
+
+4. Default Parameters in JavaScript
+📖 Definition
+
+Default Parameters allow you to set default values for function parameters if no value or undefined is passed when the function is called.
+This feature was introduced in ES6 to make function definitions cleaner and avoid manual checks for undefined.
+
+🔹 Key Points
+
+Specify a default value in the function signature:
+Example:
+=======
+function myFunc(param = defaultValue) { ... }
+
+
+If the caller does not pass an argument or passes undefined, the default value is used.
+Helps avoid undefined values and manual checks inside functions.
+
+function greet(name = "Guest") {
+  console.log(`Hello, ${name}!`);
+}
+
+greet("Mahesh"); // Output: Hello, Mahesh!
+greet();         // Output: Hello, Guest!
+
+
+===============================================================================================
+5. Destructuring Assignment in JavaScript
+📖 Definition
+
+Destructuring Assignment allows you to extract values from arrays or objects and assign them to variables in a concise and readable way.
+Introduced in ES6, it simplifies accessing data from arrays or objects without repeatedly using indexing or dot notation.
+
+Key Points
+
+Can be used with Arrays or Objects.
+Array Destructuring uses [] brackets.
+Object Destructuring uses {} curly braces.
+Supports default values, nested destructuring, and renaming variables.
+
+
+Array Destructuring:
+===================
+
+const numbers = [10, 20, 30];
+
+// Assign array elements to variables
+const [a, b, c] = numbers;
+
+console.log(a); // 10
+console.log(b); // 20
+console.log(c); // 30
+
+==============================================
+
+Object Destructuring uses:
+============================
+
+const user = { name: "Mahesh", age: 25, city: "Anantapur" };
+
+// Assign object properties to variables
+const { name, age, city } = user;
+
+console.log(name); // Mahesh
+console.log(age);  // 25
+console.log(city); // Anantapur
+
+===================================================
+
+6. Spread and Rest Operators in JavaScript
+📖 Definition
+
+Both Spread (...) and Rest (...) use the same syntax (...) but have different purposes:
+
+Operator	Purpose
+Spread (...)	Expands an array, object, or iterable into individual elements.
+Rest (...)	Collects multiple elements into a single array. Used in function parameters or destructuring.
+
+Spread Operator:
+================
+
+1.With Arrays:
+
+const numbers = [1, 2, 3];
+const newNumbers = [...numbers, 4, 5]; // Spread array elements
+console.log(newNumbers); 
+// Output: [1, 2, 3, 4, 5]
+
+2.With Objects:
+
+const user = { name: "Mahesh", age: 25 };
+const updatedUser = { ...user, city: "Anantapur" };
+console.log(updatedUser);
+// Output: { name: 'Mahesh', age: 25, city: 'Anantapur' }
+
+c) Copying Arrays/Objects:
+
+const arr1 = [1, 2];
+const arr2 = [...arr1]; // Create a shallow copy
+arr2.push(3);
+console.log(arr1); // [1, 2]
+console.log(arr2); // [1, 2, 3]
+
+================================================
+
+2. Rest Operator
+a) Collect function arguments
+
+function sum(...numbers) {
+  return numbers.reduce((total, n) => total + n, 0);
+}
+
+console.log(sum(1, 2, 3)); // Output: 6
+console.log(sum(5, 10, 15, 20)); // Output: 50
+
+b) Collect remaining elements in arrays:
+
+const [first, second, ...rest] = [10, 20, 30, 40, 50];
+console.log(first); // 10
+console.log(second); // 20
+console.log(rest); // [30, 40, 50]
+
+c) Collect remaining properties in objects:
+
+const user = { name: "Mahesh", age: 25, city: "Anantapur" };
+const { name, ...rest } = user;
+console.log(name); // Mahesh
+console.log(rest); // { age: 25, city: 'Anantapur' }
+
+
+=======================================================================================================
+
+7. Modules (import/export)
+
+JS supports module-based code.
+
+// math.js
+export const add = (a,b) => a+b;
+export const sub = (a,b) => a-b;
+
+// app.js
+import { add, sub } from './math.js';
+console.log(add(2,3)); // 5
+
+========================================
+
+8.Promises in JavaScript
+📖 Definition
+
+A Promise is an object representing the eventual completion or failure of an asynchronous operation.
+It allows handling asynchronous tasks in a clean and structured way, avoiding “callback hell.”
+
+A Promise can be in one of three states:
+
+Pending – Initial state, not fulfilled or rejected.
+Fulfilled – Operation completed successfully.
+Rejected – Operation failed.
+
+const myPromise = new Promise((resolve, reject) => {
+  const success = true; // simulate success/failure
+
+  if (success) {
+    resolve("Operation Successful!");
+  } else {
+    reject("Operation Failed!");
+  }
+});
+
+===================================================
+9.Async/Await in JavaScript
+📖 Definition
+
+Async/Await is syntactic sugar over Promises that allows writing asynchronous code in a synchronous, readable style.
+
+async keyword → Declares an asynchronous function that always returns a Promise.
+await keyword → Pauses the execution of the async function until the Promise resolves.
+
+🔹 Key Points
+
+async functions always return a Promise.
+await can only be used inside async functions.
+Makes asynchronous code look synchronous and clean.
+Errors can be handled using try/catch blocks.
+
+async function fetchData() {
+  let result = await someAsyncOperation();
+  console.log(result);
+}
+
+============================================================
+
+setTimeout and setInterval in JavaScript
+📖 Definition
+
+setTimeout → Executes a function once after a specified delay (in milliseconds).
+
+setInterval → Executes a function repeatedly at specified intervals (in milliseconds).
+
+Both are part of the Browser’s Window API and are used for timing events in JavaScript.
+
+1. setTimeout:
+
+Syntax: setTimeout(function, delayInMilliseconds, param1, param2, ...);
+
+function greet(name) {
+  console.log(`Hello, ${name}!`);
+}
+
+setTimeout(greet, 1000, "Mahesh"); // Output after 1 sec: Hello, Mahesh!
+
+
+Cancel setTimeout:
+const timeoutId = setTimeout(() => console.log("This will not run"), 3000);
+clearTimeout(timeoutId); // Cancels the timeout
+
+================================================================================
+
+2. setInterval
+Syntax: setInterval(function, intervalInMilliseconds, param1, param2, ...);
+
+function greet(name) {
+  console.log(`Hello, ${name}!`);
+}
+
+const id = setInterval(greet, 2000, "Mahesh"); // Prints every 2 sec
+
+
+Cancel setInterval
+
+Use clearInterval(intervalId) to stop repeated execution.
