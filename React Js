@@ -645,6 +645,379 @@ Promise.all([
   })
   .catch((err) => console.error("Error:", err));
 
+=============================================================
+
+Componets in React Js:
+=====================
+
+They are:
+
+
+1. Class Components in React:
+=============================
+A Class Component in React is a JavaScript class that extends React.Component and must implement a render() method that returns JSX.
+They can hold state, accept props, and use lifecycle methods to manage the component’s behavior over time.
+
+Key Points:
+============
+
+1.Must extend React.Component.
+2.Must have a render() method that returns JSX.
+3.Can use props → to receive data from parent components.
+4.Can use state → to manage internal data that changes over time.
+5.Have access to lifecycle methods, such as:
+    => componentDidMount() → runs after the component is mounted.
+    => componentDidUpdate() → runs after state/props are updated.
+    => componentWillUnmount() → runs before the component is removed.
+
+import React, { Component } from "react";
+
+class Welcome extends Component {
+  // Constructor is used to initialize state and bind methods
+  constructor(props) {
+    super(props);
+
+    // State: component’s own data
+    this.state = {
+      count: 0
+    };
+  }
+
+  // Example method to update state
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  // Lifecycle method: runs once after component mounts
+  componentDidMount() {
+    console.log("Welcome Component Mounted!");
+  }
+
+  // Required method: must return JSX
+  render() {
+    return (
+      <div>
+        {/* Props are received from parent */}
+        <h1>Hello, {this.props.name}!</h1>
+        
+        {/* State usage */}
+        <p>Count: {this.state.count}</p>
+        
+        {/* Event handler */}
+        <button onClick={this.increment}>Increase</button>
+      </div>
+    );
+  }
+}
+
+export default Welcome;
+
+===========================================
+2. Functional Components in React:
+==================================
+A Functional Component in React is a plain JavaScript function that returns JSX to describe the UI.
+Originally, functional components were called stateless components, because they could only receive data through props and could not manage state or use lifecycle methods.
+
+However, since the introduction of React Hooks (React v16.8), functional components can now:
+
+Manage state (useState)
+Handle side effects (useEffect)
+Use other React features (context, refs, memoization, etc.)
+
+Example:
+========
+import React, { useState, useEffect } from 'react';
+
+function Counter({ name }) {
+  // state with useState hook
+  const [count, setCount] = useState(0);
+
+  // lifecycle with useEffect hook
+  useEffect(() => {
+    console.log("✅ Component Mounted or Updated");
+
+    // cleanup (like componentWillUnmount)
+    return () => {
+      console.log("🛑 Component Will Unmount");
+    };
+  }, [count]);
+
+  return (
+    <div>
+      <h2>Hello, {name} 👋</h2>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increase</button>
+    </div>
+  );
+}
+
+export default Counter;
+===================================================================
+
+3. Presentational (Stateless) Components in React
+
+A Presentational Component (also called a Stateless Component) in React is a component whose primary purpose is to render UI.
+It is focused on how things look, rather than how things work.
+
+These components:
+Receive data and callbacks exclusively through props.
+Do not manage internal state (before hooks, hence called “stateless”).
+Are typically written as functional components because they only need to return JSX.
+
+Example:
+========
+
+import React from 'react';
+
+// Presentational Component
+const UserCard = ({ name, age, onClick }) => {
+  return (
+    <div style={{ border: "1px solid gray", padding: "10px", margin: "10px" }}>
+      <h3>{name}</h3>
+      <p>Age: {age}</p>
+      <button onClick={onClick}>Show Details</button>
+    </div>
+  );
+};
+
+export default UserCard;
+===============================================================
+
+4. Container (Stateful / Smart) Components in React:
+====================================================
+
+A Container Component (also known as a Stateful Component or Smart Component) in React is responsible for managing data, state, and application logic.
+Unlike Presentational Components, which only render UI, Container Components handle how things work: 
+fetching data, updating state, and passing props to child components.
+
+Example:
+========
+import React, { Component } from 'react';
+import UserCard from './UserCard'; // Presentational Component
+
+class UserContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: { name: "Mahesh", age: 25 }
+    };
+  }
+
+  showDetails = () => {
+    alert(`User: ${this.state.user.name}, Age: ${this.state.user.age}`);
+  };
+
+  render() {
+    return (
+      <UserCard 
+        name={this.state.user.name} 
+        age={this.state.user.age} 
+        onClick={this.showDetails} 
+      />
+    );
+  }
+}
+
+export default UserContainer;
+================================================
+
+5. Higher-Order Components (HOC) in React:
+==========================================
+
+A Higher-Order Component (HOC) in React is an advanced design pattern where a function takes a component as input and returns a new enhanced component.
+HOCs are used to reuse component logic, separate cross-cutting concerns (like authentication, logging, caching),
+and apply additional functionality to components without modifying their source code.
+
+==============================================================================================
+
+6. Controlled Components in React:
+==================================
+
+A Controlled Component in React is a component where the form data is controlled by React state rather than the DOM.
+In other words, the source of truth for the input value resides in the component’s state, 
+and changes to the input are handled through event handlers (like onChange).
+
+Example:
+
+import React, { useState } from 'react';
+
+function ControlledForm() {
+  const [name, setName] = useState("");
+
+  const handleChange = (e) => {
+    setName(e.target.value); // update state
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Submitted Name: ${name}`);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Enter Name: 
+        <input 
+          type="text" 
+          value={name}   // controlled by state
+          onChange={handleChange} 
+        />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default ControlledForm;
+
+=============================================
+
+7. Uncontrolled Components in React:
+===================================
+
+An Uncontrolled Component in React is a component where the form data is handled by the DOM itself, instead of being fully controlled by React state.
+Instead of binding the value of form inputs to state, React uses refs to access the DOM values when needed.
+
+import React, { useRef } from 'react';
+
+function UncontrolledForm() {
+  const nameInput = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Submitted Name: ${nameInput.current.value}`); // get value directly from DOM
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Enter Name: 
+        <input type="text" ref={nameInput} /> {/* uncontrolled input */}
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default UncontrolledForm;
+==========================================================
+
+Class Components vs Functional Components in Real-Time Banking Applications:
+
+Class Components:
+================
+
+Best used when:
+
+Maintaining or upgrading legacy React code (before Hooks).
+You need fine-grained lifecycle methods (though useEffect now covers most cases).
+Your team is more familiar with classes than hooks.
+Examples in Banking Apps:
+
+Old transaction dashboards still using class-based state.
+Legacy authentication flows (JWT sessions, login pages).
+Existing form-heavy modules (like account opening forms) if written before Hooks.
+
+✅ Functional Components (with Hooks):
+======================================
+
+Best used when:
+Building modern, scalable applications.
+Need cleaner, shorter code.
+Require advanced state & side-effect handling (useState, useEffect, useReducer, useContext).
+Focus on performance optimization (React.memo, useCallback, useMemo).
+
+Examples in Banking Apps:
+
+Real-time dashboards (e.g., live account balance updates with WebSockets or polling).
+Fund transfer forms with real-time validations.
+Transaction history components (filtering, sorting with APIs).
+Micro-frontend modules (separate React apps for loans, deposits, credit cards).
+
+⚡ Why Functional Components Are Preferred Today:
+===================================================
+
+Hooks replace lifecycle methods (cleaner useEffect instead of multiple lifecycle methods).
+Less boilerplate → shorter code vs. verbose class syntax.
+Easier testing & debugging.
+Performance optimizations via hooks are straightforward.
+Industry adoption → all modern banking & fintech apps use functional components.
+
+🏦 Banking Domain Real-World Use Case
+Example: Fund Transfer Page
+
+Functional Component:
+Handles form state with useState.
+Runs validations (account number length, balance check).
+Calls Spring Boot backend APIs using fetch or axios.
+Uses useEffect to poll transaction status until completion.
+
+Class Component (Legacy):
+========================
+Older banking portals may still have this built using componentDidMount, setState, etc.
+
+
+=========================================================================================
+
+
+
+React Component Lifecycle
+│
+├── Mounting (When component is created & inserted into DOM)
+│   ├── constructor()
+│   ├── static getDerivedStateFromProps(props, state)
+│   ├── render()
+│   └── componentDidMount()
+│
+├── Updating (When props or state change)
+│   ├── static getDerivedStateFromProps(props, state)
+│   ├── shouldComponentUpdate(nextProps, nextState)
+│   ├── render()
+│   ├── getSnapshotBeforeUpdate(prevProps, prevState)
+│   └── componentDidUpdate(prevProps, prevState, snapshot)
+│
+└── Unmounting (When component is removed from DOM)
+    └── componentWillUnmount()
+
+
+React Life Cycle with Hooks:
+===========================
+
+Functional Component Lifecycle (via useEffect)
+│
+├── Mounting
+│   └── useEffect(() => { ... }, [])
+│
+├── Updating (dependency change)
+│   └── useEffect(() => { ... }, [dependencies])
+│
+└── Unmounting (cleanup)
+    └── useEffect(() => {
+          return () => { cleanup code }
+        }, [])
+
+================================================
+
+Reconciliation in React
+🔹 Definition
+
+Reconciliation is the process by which React updates the DOM to match the latest React elements (virtual DOM).
+When the state or props of a component change, React compares the new virtual DOM with the previous virtual DOM and efficiently updates only the parts of the real DOM that changed.
+
+This makes React fast and efficient, as it avoids unnecessary DOM manipulations.
+
+🔹 How Reconciliation Works
+
+React creates a Virtual DOM representation of your UI.
+When state or props change, React creates a new Virtual DOM.
+React diffs the new virtual DOM against the old one (using a diffing algorithm).
+React applies minimal updates to the real DOM to reflect changes.
+This process is called “Reconciliation”.
+
+=================================================
+
+
+
 
 
        
