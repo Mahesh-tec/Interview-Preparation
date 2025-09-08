@@ -1,0 +1,211 @@
+1. What is Git and why do we use it?
+
+✅ Answer:
+Git is a distributed version control system that helps track changes in source code during software development. 
+It allows multiple developers to collaborate, maintain code history, and roll back if needed.
+
+👉 Why Git?
+
+Tracks changes (who changed what & when).
+Allows branching & merging.
+Works offline (distributed).
+Popular in CI/CD pipelines.
+
+2. What is the difference between Git and GitHub?
+
+✅ Answer:
+
+Git → A version control tool installed on your system to manage code locally.
+GitHub → A cloud-based hosting platform for Git repositories (also provides collaboration features like pull requests, issues).
+
+👉 Example:
+You can use Git without GitHub, but GitHub needs Git underneath.
+
+3. What is a Git repository?
+
+✅ Answer:
+
+A Git repository is a storage area where Git keeps all project files and history of changes.
+Local repo → on your system.
+Remote repo → hosted on GitHub/GitLab/Bitbucket.
+
+4. What are Git branches? Why do we use them?
+
+✅ Answer:
+
+A branch in Git is like a separate workspace where you can develop new features or fix bugs without affecting the main codebase.
+The default branch is usually main or master.
+
+👉 Example: git checkout -b feature/login
+
+5. Explain the difference between git pull and git fetch.
+
+✅ Answer:
+
+git fetch → Downloads changes from remote but does not merge into local.
+git pull → Fetches + merges remote changes into your current branch.
+
+👉 Example: 
+
+git fetch origin main   # Just downloads updates
+git pull origin main    # Downloads + merges into local main
+
+7. What is the difference between git reset, git revert, and git checkout?
+
+✅ Answer:
+
+git reset → Moves HEAD to a previous commit, discarding changes.
+
+git revert → Creates a new commit that undoes changes from a previous commit (safe for shared repos).
+
+git checkout → Switches branches or restores files.
+
+👉 Example:
+
+git reset --hard HEAD~1   # remove last commit
+git revert HEAD           # undo last commit (safe)
+git checkout feature/login # switch to branch
+
+8. What is the difference between git stash and git commit?
+
+✅ Answer:
+
+git stash → Temporarily saves uncommitted changes so you can switch branches.
+
+git commit → Permanently records changes in the repository history.
+
+👉 Example:
+
+git stash         # Save changes temporarily
+git stash pop     # Reapply stashed changes
+
+9. What is the difference between git clone and git fork?
+
+✅ Answer:
+
+-->  Clone → Copies an entire repo to your local system (still connected to the original repo).
+
+--> Fork → Creates a personal copy of someone else’s repo on GitHub (used for contributions).
+
+👉 Example:
+
+git clone https://github.com/user/repo.git
+
+Fork button on GitHub → creates your own repo under your account.
+
+10. What are Git tags?
+
+✅ Answer:
+
+Tags are markers for specific commits, usually for releases (v1.0, v2.0).
+
+👉 Example:
+
+git tag v1.0
+git push origin v1.0
+
+11. What is the difference between git status and git log?
+
+✅ Answer:
+
+git status → Shows current branch, staged/unstaged changes.
+
+git log → Shows commit history.
+
+👉 Example:
+
+git status   # Working state
+git log      # Commit history
+
+12. What is .gitignore file?
+
+✅ Answer:
+.gitignore is used to tell Git which files/folders should not be tracked.
+
+👉 Example:
+
+node_modules/
+*.log
+.env
+
+13. What is a conflict in Git? How do you resolve it?
+
+✅ Answer:
+A conflict happens when two branches modify the same part of a file differently.
+To resolve:
+
+Open conflicted file.
+Choose correct changes.
+Stage & commit after fixing.
+
+14. What is  git cherry-pick?
+
+✅ Answer:
+
+git cherry-pick → Applies a specific commit from one branch to another.
+
+ What is git cherry-pick?
+
+git cherry-pick is used to apply a specific commit from one branch into another branch.
+Instead of merging the entire branch, you pick only the commit(s) you want.
+This is useful for bug fixes, hotfixes, and selective code transfer.
+
+What is git merge ?
+git merge → Combines entire branch history.
+
+👉 Example:
+
+git cherry-pick a1b2c3d
+
+
+This applies only that commit.
+
+15. What is the difference between Centralized Version Control (SVN) and Distributed Version Control (Git)?
+
+✅ Answer:
+
+SVN (Centralized) → One central repo, requires network.
+
+Git (Distributed) → Each developer has full repo copy, can work offline.
+
+
+
+# 📌 Git Commands Quick Summary
+
+| **Command**                | **Definition**                          |
+| -------------------------- | --------------------------------------- |
+| `git init`                 | Initialize a new local Git repository   |
+| `git clone <url>`          | Copy remote repo to local system        |
+| `git status`               | Show staged/unstaged/branch status      |
+| `git add <file>`           | Stage file for commit                   |
+| `git add .`                | Stage all changes                       |
+| `git commit -m "msg"`      | Save staged changes to history          |
+| `git log`                  | Show commit history                     |
+| `git log --oneline`        | Compact history view                    |
+| `git branch`               | List branches                           |
+| `git branch <name>`        | Create new branch                       |
+| `git checkout <name>`      | Switch to branch                        |
+| `git checkout -b <name>`   | Create & switch to branch               |
+| `git switch <name>`        | Switch branch (modern)                  |
+| `git merge <branch>`       | Merge branch into current               |
+| `git rebase <branch>`      | Reapply commits on top of another       |
+| `git fetch origin`         | Get latest changes (no merge)           |
+| `git pull origin <branch>` | Fetch + merge changes                   |
+| `git push origin <branch>` | Push commits to remote                  |
+| `git reset --soft HEAD~1`  | Undo commit, keep staged changes        |
+| `git reset --hard HEAD~1`  | Undo commit & discard changes           |
+| `git revert <commit>`      | Create a new commit to undo changes     |
+| `git diff`                 | Show unstaged changes                   |
+| `git diff --staged`        | Show staged vs last commit              |
+| `git stash`                | Save changes temporarily                |
+| `git stash apply`          | Reapply last stash                      |
+| `git stash pop`            | Apply + delete stash                    |
+| `git tag v1.0`             | Create tag v1.0                         |
+| `git push origin v1.0`     | Push tag to remote                      |
+| `git cherry-pick <commit>` | Apply specific commit to current branch |
+| `git reflog`               | Show local HEAD history                 |
+| `git clean -f`             | Remove untracked files                  |
+| `git bisect`               | Find commit that introduced a bug       |
+
+
+
