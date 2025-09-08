@@ -1016,6 +1016,129 @@ This process is called “Reconciliation”.
 
 =================================================
 
+What is Redux?
+
+Redux is a state management library for JavaScript applications. 
+It is commonly used with React to manage the global state of an application in a predictable way.
+
+React by itself manages local component state using useState or useReducer. 
+But in larger apps, multiple components often need to share and update data → that’s where Redux helps.
+
+Component → Action → Store → Reducer → New State → Component (Re-render)
+
+[User Interaction / UI Event]  
+        ↓  
+ dispatch(action)  
+        ↓  
+   Redux Store  
+        ↓  
+    Reducer(s)  
+        ↓  
+   New State Created  
+        ↓  
+ React Components re-render  
+        ↓  
+  Updated UI visible to user
+
+
+Core Concepts of Redux
+
+Store
+
+The single source of truth (global state container).
+Holds the complete state of the application.
+
+Action
+
+A plain JavaScript object describing what happened.
+Must have a type property.
+
+Example: { type: "ADD_TODO", payload: "Learn Redux" }
+
+Reducer
+
+A pure function that takes the current state and an action, and returns the new state.
+
+Example: function todoReducer(state = [], action) {
+  switch (action.type) {
+    case "ADD_TODO":
+      return [...state, action.payload];
+    default:
+      return state;
+  }
+}
+
+Dispatch
+
+A method used to send actions to the store.
+
+Example: dispatch({ type: "ADD_TODO", payload: "Learn Redux" });
+
+Selector
+
+A function to extract specific data from the store.
+
+==============================================================================================
+
+Three Principles of Redux:
+============================
+
+1. Single Source of Truth:
+=========================
+
+The entire application state is stored in a single store (a single JavaScript object tree).
+This makes it easy to track and debug state changes.
+
+==> Instead of multiple states spread across components, everything is stored centrally.
+
+✅ Example:
+ const store = {
+  user: { id: 1, name: "Mahesh" },
+  cart: [{ id: 101, item: "Laptop", price: 50000 }],
+  theme: "dark"
+};
+
+2. State is Read-Only:
+=====================
+
+The only way to change the state is by dispatching an action.
+Components cannot directly modify the store’s state.
+
+✅ Example:
+
+       // ❌ Wrong – directly modifying state
+         store.user.name = "John";  
+
+       // ✅ Correct – using action
+        dispatch({ type: "UPDATE_NAME", payload: "John" });
+
+   This ensures all changes are explicit and trackable.
+
+3. Changes are Made with Pure Functions
+
+Reducers are pure functions.
+A reducer takes previous state + action and returns a new state.
+They should not mutate state or perform side effects like API calls.
+
+✅ Example Reducer: 
+
+function counterReducer(state = { count: 0 }, action) {
+  switch (action.type) {
+    case "INCREMENT":
+      return { count: state.count + 1 };  // ✅ Pure function
+    case "DECREMENT":
+      return { count: state.count - 1 };
+    default:
+      return state;
+  }
+}
+
+
+
+
+
+
+
 
 
 
