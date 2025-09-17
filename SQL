@@ -1,0 +1,91 @@
+dept Table
+
+| dept\_id | dept\_name |
+| -------- | ---------- |
+| 10       | ACCOUNTING |
+| 20       | RESEARCH   |
+| 30       | SALES      |
+| 40       | OPERATIONS |
+| 50       | MARKETING  |
+
+============================
+
+emp Table
+
+| emp\_id | ename | salary | dept\_id |
+| ------- | ----- | ------ | -------- |
+| 1       | KING  | 5000   | 10       |
+| 2       | CLARK | 2450   | 10       |
+| 3       | SMITH | 800    | 20       |
+| 4       | ALLEN | 1600   | 30       |
+| 5       | WARD  | 1250   | 30       |
+
+
+===========================================
+
+1. Department-wise total salary:
+
+SELECT d.dept_name,SUM(e.salary) AS total_salary
+FROM emp e
+JOIN  dept d ON e.dept_id = d.dept_id
+GROUP BY d.dept_name;
+
+output:
+
+| dept\_name | total\_salary |
+| ---------- | ------------- |
+| ACCOUNTING | 7450          |
+| RESEARCH   | 800           |
+| SALES      | 2850          |
+
+=========================================
+
+2. Department-wise average salary:
+=================================
+
+SELECT
+    d.dept_name,
+    AVG(e.salary) AS average_salary
+FROM
+    emp e
+JOIN
+    dept d ON e.dept_id = d.dept_id
+GROUP BY
+    d.dept_name;
+
+Output:
+
+| dept\_name | average\_salary |
+| ---------- | --------------- |
+| ACCOUNTING | 3725.00         |
+| RESEARCH   | 800.00          |
+| SALES      | 1425.00         |
+
+=====================================
+
+3. Department-wise maximum and minimum salary:
+
+
+SELECT
+    d.dept_name,
+    MAX(e.salary) AS max_salary,
+    MIN(e.salary) AS min_salary
+FROM
+    emp e
+JOIN
+    dept d ON e.dept_id = d.dept_id
+GROUP BY
+    d.dept_name;
+
+Output:
+
+| dept\_name | max\_salary | min\_salary |
+| ---------- | ----------- | ----------- |
+| ACCOUNTING | 5000        | 2450        |
+| RESEARCH   | 800         | 800         |
+| SALES      | 1600        | 1250        |
+
+============================================
+
+===================================
+
